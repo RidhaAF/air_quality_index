@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:air_quality_index/utilities/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -45,16 +46,17 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 Text(
                   subtitle ?? '',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: secondaryColor,
-                      ),
+                  style: GoogleFonts.dmSans(
+                    color: secondaryColor,
+                    fontSize: 12,
+                  ),
                   textScaleFactor: 1.0,
                 ),
               ],
             ),
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? primaryColor,
+      backgroundColor: backgroundColor,
       centerTitle:
           centerTitle ? (Platform.isAndroid ? false : true) : centerTitle,
       elevation: elevation ?? 0.0,
