@@ -255,10 +255,17 @@ class _HomePageState extends State<HomePage> {
             aqiStatus: aqiStatus,
             textColor: textColor,
           ),
-          SizedBox(height: defaultMargin / 2),
-          _pm2point5(
-            pm2point5: pm2point5,
-            textColor: textColor,
+          Visibility(
+            visible: false,
+            child: Column(
+              children: [
+                SizedBox(height: defaultMargin / 2),
+                _pm2point5(
+                  pm2point5: pm2point5,
+                  textColor: textColor,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -300,16 +307,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _aqiGuide({required Color textColor}) {
-    return IconButton(
-      onPressed: () {
-        context.push('/aqi-guide');
-      },
-      icon: Icon(
-        Icons.info_outline_rounded,
-        size: 24,
-        color: textColor,
+    return Container(
+      decoration: BoxDecoration(
+        color: whiteColor,
+        shape: BoxShape.circle,
       ),
-      tooltip: 'AQI Guide',
+      child: IconButton(
+        onPressed: () {
+          context.push('/aqi-guide');
+        },
+        icon: Icon(
+          Icons.info_outline_rounded,
+          size: 24,
+          color: textColor,
+        ),
+        tooltip: 'AQI Guide',
+      ),
     );
   }
 
