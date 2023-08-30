@@ -24,15 +24,11 @@ class DefaultThemes {
       selectionHandleColor: primaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: primaryColor,
-      foregroundColor: whiteColor,
-      iconTheme: IconThemeData(
-        color: whiteColor,
-      ),
-      actionsIconTheme: IconThemeData(
-        color: whiteColor,
-      ),
-      titleTextStyle: TextStyle(
+      backgroundColor: bgColorLight2,
+      foregroundColor: primaryColor,
+      elevation: 0.0,
+      titleTextStyle: GoogleFonts.dmSans(
+        color: primaryColor,
         fontSize: bodyFS,
         fontWeight: semiBold,
       ),
@@ -93,15 +89,11 @@ class DefaultThemes {
       selectionHandleColor: primaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: primaryColor,
-      foregroundColor: whiteColor,
-      iconTheme: IconThemeData(
-        color: whiteColor,
-      ),
-      actionsIconTheme: IconThemeData(
-        color: whiteColor,
-      ),
+      backgroundColor: bgColorDark4,
+      foregroundColor: primaryColor,
+      elevation: 0.0,
       titleTextStyle: GoogleFonts.dmSans(
+        color: primaryColor,
         fontSize: bodyFS,
         fontWeight: semiBold,
       ),

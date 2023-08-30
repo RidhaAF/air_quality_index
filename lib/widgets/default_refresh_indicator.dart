@@ -17,6 +17,8 @@ class DefaultRefreshIndicator extends StatelessWidget {
       onRefresh: onRefresh,
       color: primaryColor,
       backgroundColor: getContainerColor(context),
+      semanticsLabel: 'Refresh',
+      semanticsValue: 'Refresh',
       child: child,
     );
   }

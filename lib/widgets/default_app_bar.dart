@@ -54,7 +54,7 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? primaryColor,
+      backgroundColor: backgroundColor,
       centerTitle:
           centerTitle ? (Platform.isAndroid ? false : true) : centerTitle,
       elevation: elevation ?? 0.0,
