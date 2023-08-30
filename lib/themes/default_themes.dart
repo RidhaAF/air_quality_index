@@ -66,6 +66,10 @@ class DefaultThemes {
         ),
       ),
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: bgColorLight2,
+      shape: radiusTopLeftRight,
+    ),
   );
 
   ThemeData dark = ThemeData(
@@ -130,6 +134,10 @@ class DefaultThemes {
           fontSize: calloutFS,
         ),
       ),
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: bgColorDark4,
+      shape: radiusTopLeftRight,
     ),
   );
 }

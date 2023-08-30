@@ -25,4 +25,23 @@ class AqiCubit extends Cubit<AqiState> {
       emit(AqiError(e.toString()));
     }
   }
+
+  Future<void> getSpecifiedCityAqi({
+    required String country,
+    required String state,
+    required String city,
+  }) async {
+    emit(AqiLoading());
+
+    try {
+      aqiModel = await AqiService().getSpecifiedCityAqi(
+        country: country,
+        state: state,
+        city: city,
+      );
+      emit(AqiLoaded(aqiModel));
+    } catch (e) {
+      emit(AqiError(e.toString()));
+    }
+  }
 }

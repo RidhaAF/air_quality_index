@@ -9,6 +9,7 @@ import 'package:air_quality_index/widgets/default_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final box = GetStorage();
   double latitude = 0.0;
   double longitude = 0.0;
 
@@ -61,12 +63,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   _getData() {
-    _getUserLocation().then((value) {
-      context.read<AqiCubit>().getNearestCityAqi(
-            latitude: latitude,
-            longitude: longitude,
+    String locationType = box.read('locationType') ?? 'nearest';
+
+    if (locationType == 'nearest') {
+      _getUserLocation().then((value) {
+        context.read<AqiCubit>().getNearestCityAqi(
+              latitude: latitude,
+              longitude: longitude,
+            );
+      });
+    } else {
+      String country = box.read('country') ?? '';
+      String state = box.read('state') ?? '';
+      String city = box.read('city') ?? '';
+
+      context.read<AqiCubit>().getSpecifiedCityAqi(
+            country: country,
+            state: state,
+            city: city,
           );
-    });
+    }
   }
 
   @override
@@ -83,6 +99,10 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
+              box.write('locationType', 'nearest');
+              box.remove('country');
+              box.remove('state');
+              box.remove('city');
               _getData();
               setState(() {});
             },
@@ -90,7 +110,13 @@ class _HomePageState extends State<HomePage> {
             tooltip: 'Find My Location',
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push('/search').then((value) {
+                if (value != null) {
+                  _getData();
+                }
+              });
+            },
             icon: const Icon(Icons.search_rounded),
             tooltip: 'Search',
           ),

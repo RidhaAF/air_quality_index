@@ -22,13 +22,28 @@ Widget homeShimmer() {
   );
 }
 
-Widget verticalShimmer({double? width, double? height}) {
+Widget verticalShimmer({double? width, double? height, bool isPadding = true}) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+    padding: isPadding ? EdgeInsets.symmetric(horizontal: defaultMargin) : null,
     child: ShimmerBox(
       width: width ?? 256,
       height: height ?? 16,
       borderRadius: BorderRadius.circular(defaultRadius),
     ),
+  );
+}
+
+Widget listTileShimmer({int? itemCount}) {
+  return ListView.separated(
+    itemCount: itemCount ?? 20,
+    separatorBuilder: (context, i) => const Divider(height: 0),
+    itemBuilder: (context, i) {
+      return ListTile(
+        title: verticalShimmer(
+          width: double.infinity,
+          isPadding: false,
+        ),
+      );
+    },
   );
 }

@@ -172,3 +172,10 @@ RoundedRectangleBorder cardBorderRadius = RoundedRectangleBorder(
     Radius.circular(defaultRadius),
   ),
 );
+
+ShapeBorder radiusTopLeftRight = RoundedRectangleBorder(
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(defaultRadius * 3),
+    topRight: Radius.circular(defaultRadius * 3),
+  ),
+);
