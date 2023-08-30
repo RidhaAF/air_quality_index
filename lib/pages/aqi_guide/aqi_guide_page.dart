@@ -4,8 +4,8 @@ import 'package:air_quality_index/widgets/default_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AqiGuide extends StatelessWidget {
-  const AqiGuide({super.key});
+class AqiGuidePage extends StatelessWidget {
+  const AqiGuidePage({super.key});
 
   @override
   Widget build(BuildContext context) {
