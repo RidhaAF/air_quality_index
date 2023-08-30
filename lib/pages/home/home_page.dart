@@ -207,7 +207,6 @@ class _HomePageState extends State<HomePage> {
               _aqiStatusPM(
                 aqiData,
                 aqiStatus: aqiStatus,
-                pm2point5: 43.6,
                 textColor: textColor,
               ),
               _aqiGuide(
@@ -247,7 +246,6 @@ class _HomePageState extends State<HomePage> {
   Widget _aqiStatusPM(
     AqiData? aqiData, {
     required String aqiStatus,
-    required double pm2point5,
     required Color textColor,
   }) {
     double? pm2point5 = aqiData?.current?.pollution?.aqicn?.toDouble() ?? 0.0;
@@ -319,6 +317,7 @@ class _HomePageState extends State<HomePage> {
     int? temperature = aqiData?.current?.weather?.tp ?? 0;
     double? windSpeed = aqiData?.current?.weather?.ws ?? 0;
     int? humidity = aqiData?.current?.weather?.hu ?? 0;
+    String? icon = aqiData?.current?.weather?.ic ?? '03d';
 
     return Container(
       width: double.infinity,
@@ -333,41 +332,51 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _weatherText(
             '$temperature°C',
-            icon: Icons.cloud_rounded,
-            iconColor: greyColor,
+            icon: _weatherIcon(icon: icon),
           ),
           SizedBox(width: defaultMargin / 2),
           _weatherText(
             '$windSpeed km/h',
-            icon: Icons.air_rounded,
-            iconColor: Colors.lightBlue.shade100,
+            icon: Icon(
+              Icons.air_rounded,
+              color: Colors.lightBlue.shade100,
+            ),
           ),
           SizedBox(width: defaultMargin / 2),
           _weatherText(
             '$humidity%',
-            icon: Icons.water_drop_rounded,
-            iconColor: Colors.lightBlue.shade300,
+            icon: Icon(
+              Icons.water_drop_rounded,
+              color: Colors.lightBlue.shade300,
+            ),
           ),
         ],
       ),
     );
   }
 
+  Widget _weatherIcon({required String icon}) {
+    return Image.asset(
+      'assets/icons/weather/$icon.png',
+      width: 32,
+      height: 32,
+      fit: BoxFit.contain,
+      semanticLabel: 'Weather Icon',
+      errorBuilder: (context, error, stackTrace) => _weatherIcon(icon: '03d'),
+    );
+  }
+
   Widget _weatherText(
     text, {
-    required IconData icon,
-    required Color iconColor,
+    required Widget icon,
   }) {
     return Row(
       children: [
-        Icon(
-          icon,
-          color: iconColor,
-        ),
+        icon,
         SizedBox(width: defaultMargin / 2),
         Text(
           text,
