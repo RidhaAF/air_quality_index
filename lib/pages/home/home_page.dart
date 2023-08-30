@@ -1,8 +1,13 @@
+import 'package:air_quality_index/cubits/aqi/aqi_cubit.dart';
+import 'package:air_quality_index/models/aqi_model.dart';
 import 'package:air_quality_index/utilities/constants.dart';
 import 'package:air_quality_index/utilities/functions.dart';
+import 'package:air_quality_index/widgets/default_404.dart';
 import 'package:air_quality_index/widgets/default_app_bar.dart';
 import 'package:air_quality_index/widgets/default_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  double latitude = 0.0;
+  double longitude = 0.0;
+
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
@@ -21,7 +29,49 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _getData() {}
+  Future<void> _getUserLocation() async {
+    bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!isLocationServiceEnabled) {
+      Geolocator.openLocationSettings().then((value) => _getUserLocation());
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        Geolocator.openAppSettings().then((value) => _getUserLocation());
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Geolocator.openAppSettings().then((value) => _getUserLocation());
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    latitude = position.latitude;
+    longitude = position.longitude;
+  }
+
+  _getData() {
+    _getUserLocation().then((value) {
+      context.read<AqiCubit>().getNearestCityAqi(
+            latitude: latitude,
+            longitude: longitude,
+          );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +80,10 @@ class _HomePageState extends State<HomePage> {
         title: 'Air Quality Index',
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _getData();
+              setState(() {});
+            },
             icon: const Icon(Icons.my_location_rounded),
             tooltip: 'Find My Location',
           ),
@@ -45,17 +98,44 @@ class _HomePageState extends State<HomePage> {
         onRefresh: _onRefresh,
         child: ListView(
           children: [
-            SizedBox(height: defaultMargin),
-            _locationInfo(),
-            SizedBox(height: defaultMargin),
-            _aqiWeatherInfo(),
+            BlocBuilder<AqiCubit, AqiState>(
+              builder: (context, state) {
+                if (state is AqiInitial) {
+                  return Container();
+                } else if (state is AqiLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  );
+                } else if (state is AqiLoaded) {
+                  AqiData? aqiData = state.aqiModel.data;
+
+                  return Column(
+                    children: [
+                      SizedBox(height: defaultMargin),
+                      _locationInfo(aqiData),
+                      SizedBox(height: defaultMargin),
+                      _aqiWeatherInfo(aqiData),
+                      SizedBox(height: defaultMargin),
+                      _lastUpdated(aqiData),
+                    ],
+                  );
+                }
+                return const Default404();
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _locationInfo() {
+  Widget _locationInfo(AqiData? aqiData) {
+    String city = aqiData?.city ?? '';
+    String country = aqiData?.country ?? '';
+    String location = '$city, $country';
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: defaultMargin),
       child: Row(
@@ -67,7 +147,7 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(width: defaultMargin / 2),
           Text(
-            'Bandung, Indonesia',
+            location,
             style: GoogleFonts.dmSans(
               fontSize: 24,
               fontWeight: semiBold,
@@ -79,22 +159,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _aqiWeatherInfo() {
+  Widget _aqiWeatherInfo(AqiData? aqiData) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [primaryBoxShadow],
       ),
       child: Column(
         children: [
-          _aqiInfo(),
-          _weatherInfo(),
+          _aqiInfo(aqiData),
+          _weatherInfo(aqiData),
         ],
       ),
     );
   }
 
-  Widget _aqiInfo() {
-    int aqi = 5;
+  Widget _aqiInfo(AqiData? aqiData) {
+    int? aqi = aqiData?.current?.pollution?.aqius ?? 0;
     String aqiStatus = aqiStatusFormatter(aqi);
     Color aqiColor = aqiColorFormatter(aqi);
     Color textColor = aqiTextColorFormatter(aqi);
@@ -125,6 +205,7 @@ class _HomePageState extends State<HomePage> {
                 textColor: textColor,
               ),
               _aqiStatusPM(
+                aqiData,
                 aqiStatus: aqiStatus,
                 pm2point5: 43.6,
                 textColor: textColor,
@@ -163,11 +244,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _aqiStatusPM({
+  Widget _aqiStatusPM(
+    AqiData? aqiData, {
     required String aqiStatus,
     required double pm2point5,
     required Color textColor,
   }) {
+    double? pm2point5 = aqiData?.current?.pollution?.aqicn?.toDouble() ?? 0.0;
+
     return Expanded(
       child: Column(
         children: [
@@ -177,7 +261,7 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: defaultMargin / 2),
           _pm2point5(
-            pm2point5: 43.6,
+            pm2point5: pm2point5,
             textColor: textColor,
           ),
         ],
@@ -231,7 +315,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _weatherInfo() {
+  Widget _weatherInfo(AqiData? aqiData) {
+    int? temperature = aqiData?.current?.weather?.tp ?? 0;
+    double? windSpeed = aqiData?.current?.weather?.ws ?? 0;
+    int? humidity = aqiData?.current?.weather?.hu ?? 0;
+
     return Container(
       width: double.infinity,
       height: 64,
@@ -248,19 +336,19 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _weatherText(
-            '30°C',
+            '$temperature°C',
             icon: Icons.cloud_rounded,
             iconColor: greyColor,
           ),
           SizedBox(width: defaultMargin / 2),
           _weatherText(
-            '6.4 km/h',
+            '$windSpeed km/h',
             icon: Icons.air_rounded,
             iconColor: Colors.lightBlue.shade100,
           ),
           SizedBox(width: defaultMargin / 2),
           _weatherText(
-            '48%',
+            '$humidity%',
             icon: Icons.water_drop_rounded,
             iconColor: Colors.lightBlue.shade300,
           ),
@@ -287,6 +375,26 @@ class _HomePageState extends State<HomePage> {
           textScaleFactor: 1.0,
         ),
       ],
+    );
+  }
+
+  Widget _lastUpdated(AqiData? aqiData) {
+    DateTime time = aqiData?.current?.pollution?.ts ??
+        DateTime.parse('1970-01-01T00:00:00.000Z');
+    String lastUpdated = timeFormatter(time);
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+      child: Text(
+        'Last updated: $lastUpdated',
+        style: GoogleFonts.dmSans(
+          color: mutedColor,
+          fontSize: 12,
+          fontWeight: semiBold,
+        ),
+        textAlign: TextAlign.center,
+        textScaleFactor: 1.0,
+      ),
     );
   }
 }
