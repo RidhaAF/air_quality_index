@@ -9,6 +9,7 @@ import 'package:air_quality_index/widgets/default_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
@@ -300,7 +301,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _aqiGuide({required Color textColor}) {
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        context.push('/aqi-guide');
+      },
       icon: Icon(
         Icons.info_outline_rounded,
         size: 24,
