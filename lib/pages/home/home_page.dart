@@ -390,7 +390,7 @@ class _HomePageState extends State<HomePage> {
   Widget _lastUpdated(AqiData? aqiData) {
     DateTime time = aqiData?.current?.pollution?.ts ??
         DateTime.parse('1970-01-01T00:00:00.000Z');
-    String lastUpdated = timeFormatter(time);
+    String lastUpdated = timeLocalFormatter(time);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: defaultMargin),

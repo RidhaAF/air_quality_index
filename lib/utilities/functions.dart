@@ -15,6 +15,10 @@ String timeFormatter(DateTime dateTime) {
   return DateFormat.jm().format(dateTime);
 }
 
+String timeLocalFormatter(DateTime dateTime) {
+  return DateFormat.jm().format(dateTime.toLocal());
+}
+
 String aqiStatusFormatter(int aqi) {
   String aqiStatus = 'Good';
 
