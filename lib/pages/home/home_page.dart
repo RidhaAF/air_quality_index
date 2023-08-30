@@ -5,6 +5,7 @@ import 'package:air_quality_index/utilities/functions.dart';
 import 'package:air_quality_index/widgets/default_404.dart';
 import 'package:air_quality_index/widgets/default_app_bar.dart';
 import 'package:air_quality_index/widgets/default_refresh_indicator.dart';
+import 'package:air_quality_index/widgets/default_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -103,11 +104,7 @@ class _HomePageState extends State<HomePage> {
                 if (state is AqiInitial) {
                   return Container();
                 } else if (state is AqiLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  );
+                  return homeShimmer();
                 } else if (state is AqiLoaded) {
                   AqiData? aqiData = state.aqiModel.data;
 

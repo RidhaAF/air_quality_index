@@ -8,7 +8,7 @@ bool isDarkMode(BuildContext context) {
 }
 
 Color getContainerColor(BuildContext context) {
-  return isDarkMode(context) ? bgColorDark1 : bgColorLight1;
+  return isDarkMode(context) ? bgColorDark4 : bgColorLight2;
 }
 
 String timeFormatter(DateTime dateTime) {
