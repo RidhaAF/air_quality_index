@@ -6,6 +6,7 @@ import 'package:air_quality_index/models/country_model.dart';
 import 'package:air_quality_index/models/state_model.dart';
 import 'package:air_quality_index/utilities/constants.dart';
 import 'package:air_quality_index/widgets/default_404.dart';
+import 'package:air_quality_index/widgets/default_429.dart';
 import 'package:air_quality_index/widgets/default_refresh_indicator.dart';
 import 'package:air_quality_index/widgets/default_search_bar.dart';
 import 'package:air_quality_index/widgets/default_shimmer.dart';
@@ -213,6 +214,13 @@ class _DefaultBottomSheetState extends State<DefaultBottomSheet> {
                   );
                 },
               );
+            } else if (state is CountryError) {
+              String err = state.message;
+
+              if (err.contains('429')) {
+                return const Default429();
+              }
+              return const Default404();
             }
             return const Default404();
           },
@@ -254,6 +262,13 @@ class _DefaultBottomSheetState extends State<DefaultBottomSheet> {
                   );
                 },
               );
+            } else if (state is StateProvinceError) {
+              String err = state.message;
+
+              if (err.contains('429')) {
+                return const Default429();
+              }
+              return const Default404();
             }
             return const Default404();
           },
@@ -295,6 +310,13 @@ class _DefaultBottomSheetState extends State<DefaultBottomSheet> {
                   );
                 },
               );
+            } else if (state is CityError) {
+              String err = state.message;
+
+              if (err.contains('429')) {
+                return const Default429();
+              }
+              return const Default404();
             }
             return const Default404();
           },
