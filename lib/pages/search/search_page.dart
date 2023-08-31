@@ -143,9 +143,12 @@ class _SearchPageState extends State<SearchPage> {
           if (type == 'country') {
             country = value;
             _countryCtrl.text = country?.name ?? '';
+            _stateCtrl.clear();
+            _cityCtrl.clear();
           } else if (type == 'state') {
             state = value;
             _stateCtrl.text = state?.name ?? '';
+            _cityCtrl.clear();
           } else if (type == 'city') {
             city = value;
             _cityCtrl.text = city?.name ?? '';
