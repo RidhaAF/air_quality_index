@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Default404 extends StatelessWidget {
-  const Default404({super.key});
+  final String? image;
+  final String? title;
+  final String? subtitle;
+  const Default404({
+    super.key,
+    this.image,
+    this.title,
+    this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +22,12 @@ class Default404 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/icons/ic_404.png',
+              image ?? 'assets/icons/ic_404.png',
               width: 96,
             ),
             SizedBox(height: defaultMargin * 2),
             Text(
-              'Oops!',
+              title ?? 'Oops!',
               style: GoogleFonts.dmSans(
                 color: primaryColor,
                 fontSize: 28,
@@ -29,7 +37,7 @@ class Default404 extends StatelessWidget {
             ),
             SizedBox(height: defaultMargin / 4),
             Text(
-              'Data not found',
+              subtitle ?? 'Data not found',
               style: GoogleFonts.dmSans(
                 color: mutedColor,
               ),
