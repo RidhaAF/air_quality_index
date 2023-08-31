@@ -51,6 +51,25 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/ic_app.png"
+  adaptive_icon_background: "#FB8C00"
+  adaptive_icon_foreground: "assets/icons/ic_app_white_432px.png"
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/icons/ic_app_orange.png"
+  color_dark: "#FB8C00"
+  image_dark: "assets/icons/ic_app_white.png"
+  android_12:
+    color: "#FFFFFF"
+    icon_background_color: "#FFFFFF"
+    color_dark: "#FB8C00"
+    icon_background_color_dark: "#FB8C00"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.

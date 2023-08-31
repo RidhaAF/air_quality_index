@@ -27,7 +27,7 @@ String aqiStatusFormatter(int aqi) {
   } else if (aqi <= 100) {
     aqiStatus = 'Moderate';
   } else if (aqi <= 150) {
-    aqiStatus = 'Unhealthy for sensitive groups';
+    aqiStatus = 'Unhealthy for\nsensitive groups';
   } else if (aqi <= 200) {
     aqiStatus = 'Unhealthy';
   } else if (aqi <= 300) {
